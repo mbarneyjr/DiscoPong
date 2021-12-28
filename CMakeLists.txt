@@ -43,5 +43,13 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if (APPLE)
-  target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+  target_link_libraries(${PROJECT_NAME}
+    "-framework OpenGL"
+  )
+endif()
+
+if (WIN32)
+  target_link_libraries(${PROJECT_NAME}
+    opengl32
+  )
 endif()
