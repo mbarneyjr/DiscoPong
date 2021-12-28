@@ -1,4 +1,3 @@
 #! /bin/bash
 
-cd out/build
-make
+cmake --build ./out/build/
