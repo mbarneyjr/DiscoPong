@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project(DiscoPong)
+project(DiscoPong
+  VERSION 0.0.0
+)
+add_executable(${PROJECT_NAME} main.cpp)
+
+configure_file(DiscoPongConfig.h.in DiscoPongConfig.h)
 
 # Git pull submodules recursively
 find_package(Git QUIET)
@@ -18,14 +23,13 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     endif()
 endif()
 
-add_executable(${PROJECT_NAME} main.cpp)
-
 add_subdirectory(lib/hello)
 add_subdirectory(lib/glfw)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE lib/hello
   PRIVATE lib/glfw/include
+  PRIVATE ${PROJECT_BINARY_DIR}
 )
 
 target_link_directories(${PROJECT_NAME}

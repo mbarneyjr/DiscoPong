@@ -46,3 +46,7 @@ _deps
 
 # Build directory
 out
+
+# misc
+.vscode
+.DS_Store
