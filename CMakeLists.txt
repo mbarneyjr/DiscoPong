@@ -25,21 +25,25 @@ endif()
 
 add_subdirectory(lib/hello)
 add_subdirectory(lib/glfw)
+add_subdirectory(lib/glad)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE lib/hello
   PRIVATE lib/glfw/include
+  PRIVATE lib/glad/include
   PRIVATE ${PROJECT_BINARY_DIR}
 )
 
 target_link_directories(${PROJECT_NAME}
   PRIVATE lib/hello
   PRIVATE lib/glfw/src
+  PUBLIC lib/glad/src
 )
 
 target_link_libraries(${PROJECT_NAME}
   hello
   glfw
+  glad
 )
 
 if (APPLE)
