@@ -67,6 +67,10 @@ int main() {
   double currentTime = glfwGetTime();
   double lastTime = glfwGetTime();
   while(!glfwWindowShouldClose(window)) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+      glfwSetWindowShouldClose(window, true);
+    }
+
     currentTime = glfwGetTime();
     if (currentTime - lastTime >= 1.0f / maxFps) {
       lastTime = currentTime;
@@ -77,5 +81,7 @@ int main() {
       glfwPollEvents();
     }
   }
+
+  glfwTerminate();
   return 0;
 }
