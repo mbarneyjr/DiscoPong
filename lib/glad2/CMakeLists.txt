@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(glad)
+project(glad2)
 
 add_library(${PROJECT_NAME} include/glad/gl.h src/gl.c)
 target_include_directories(${PROJECT_NAME}

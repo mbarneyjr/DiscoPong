@@ -1,11 +1,24 @@
 cmake_minimum_required(VERSION 3.22.1)
-
+set(CMAKE_CXX_STANDARD 14)
 project(DiscoPong
   VERSION 0.0.0
 )
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME}
+  src/main.cpp
+  src/window/Window.cpp
+  src/math/Vec2.cpp
+  src/math/Vec3.cpp
+  src/math/Vec4.cpp
+  src/math/Mat4.cpp
+  src/shader/Shader.cpp
+  src/opengl/VBO.cpp
+  src/opengl/VAO.cpp
+  src/opengl/EBO.cpp
+)
+configure_file(src/DiscoPongConfig.h.in DiscoPongConfig.h)
 
-configure_file(DiscoPongConfig.h.in DiscoPongConfig.h)
+# Resoruces
+file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
 
 # Git pull submodules recursively
 find_package(Git QUIET)
@@ -23,33 +36,30 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     endif()
 endif()
 
-add_subdirectory(lib/hello)
 add_subdirectory(lib/glfw)
-add_subdirectory(lib/glad)
+add_subdirectory(lib/glad2)
 
 target_include_directories(${PROJECT_NAME}
-  PRIVATE lib/hello
   PRIVATE lib/glfw/include
-  PRIVATE lib/glad/include
+  PRIVATE lib/glad2/include
   PRIVATE ${PROJECT_BINARY_DIR}
 )
 
 target_link_directories(${PROJECT_NAME}
-  PRIVATE lib/hello
   PRIVATE lib/glfw/src
-  PUBLIC lib/glad/src
+  PRIVATE lib/glad2/src
 )
 
 target_link_libraries(${PROJECT_NAME}
-  hello
   glfw
-  glad
+  glad2
 )
 
 if (APPLE)
   target_link_libraries(${PROJECT_NAME}
     "-framework OpenGL"
   )
+  add_definitions( -DGL_SILENCE_DEPRECATION )
 endif()
 
 if (WIN32)
