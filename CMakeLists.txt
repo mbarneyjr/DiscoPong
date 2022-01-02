@@ -11,9 +11,11 @@ add_executable(${PROJECT_NAME}
   src/math/Vec4.cpp
   src/math/Mat4.cpp
   src/shader/Shader.cpp
-  src/opengl/VBO.cpp
-  src/opengl/VAO.cpp
-  src/opengl/EBO.cpp
+  src/buffers/Buffer.cpp
+  src/buffers/IndexBuffer.cpp
+  src/buffers/VertexArray.cpp
+  src/renderer/Renderable2d.cpp
+  src/renderer/Simple2dRenderer.cpp
 )
 configure_file(src/DiscoPongConfig.h.in DiscoPongConfig.h)
 

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+#include "../math/math.h"
 
 #define MAX_KEYS 1024
 #define MAX_BUTTONS 32
@@ -13,6 +14,7 @@ namespace GameEngine {
     GLFWwindow *window;
 
     const char *title;
+    Vec4 backgroundColor;
     int width, height;
 
     bool keys[MAX_KEYS];
@@ -20,12 +22,13 @@ namespace GameEngine {
     double mouseX, mouseY;
 
   public:
-    Window(const char *name, int width, int height);
+    Window(const char *name, int width, int height, Vec4 backgroundColor);
     ~Window();
 
     void clear() const;
     void update() const;
     bool closed() const;
+    void getWindowSize(int &width, int &height) const;
 
     void setWindowSize(int width, int height);
     void setKeyPressed(unsigned int keycode, bool pressed);

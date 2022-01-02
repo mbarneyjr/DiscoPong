@@ -1,15 +1,17 @@
 #version 330 core
 
-in vec4 pos;
-in vec3 vertexColor;
+layout (location = 0) out vec4 color;
 
-uniform vec4 colour;
 uniform vec2 light_pos;
 
-out vec4 color;
+in DATA
+{
+  vec4 position;
+  vec4 color;
+} fs_in;
 
 void main()
 {
-  float intensity = 0.5 / length(pos.xy - light_pos);
-  color = vec4(vertexColor, 1.0f) * intensity;
+  float intensity = 1.0 / length(fs_in.position.xy - light_pos);
+  color = fs_in.color * intensity;
 }

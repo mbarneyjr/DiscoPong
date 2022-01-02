@@ -1,10 +1,11 @@
 #include "Window.h"
 
 namespace GameEngine {
-  Window::Window(const char *title, int width, int height) {
+  Window::Window(const char *title, int width, int height, Vec4 backgroundColor) {
     this->title = title;
     this->width = width;
     this->height = height;
+    this->backgroundColor = backgroundColor;
     for (int i = 0; i < MAX_KEYS; i++) {
       this->keys[i] = false;
     }
@@ -47,6 +48,8 @@ namespace GameEngine {
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << '\n';
     // glViewport(0, 0, this->width, this->height);
 
+    glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
+
     glfwSetWindowUserPointer(this->window, this);
 
     glfwSetWindowSizeCallback(this->window, windowResizeCallback);
@@ -60,15 +63,24 @@ namespace GameEngine {
 
   void Window::clear() const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(this->backgroundColor.x, this->backgroundColor.y, this->backgroundColor.z, this->backgroundColor.w);
   }
 
   void Window::update() const {
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+      std::cout << "OpenGL error: " << error << '\n';
+    }
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
 
   bool Window::closed() const {
     return glfwWindowShouldClose(this->window) == 1;
+  }
+
+  void Window::getWindowSize(int &width, int &height) const {
+    glfwGetWindowSize(this->window, &width, &height);
   }
 
   void Window::setWindowSize(int width, int height) {
