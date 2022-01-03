@@ -32,6 +32,8 @@ public:
     this->shader->setUniformMat4("pr_matrix", ortho);
     this->renderer = new GameEngine::Simple2dRenderer();
     this->initializeGrid(numColumns, numRows, spacingPercent);
+    this->lightX = 0;
+    this->lightY = 0;
   }
   ~Game() {
     delete this->window;
@@ -40,12 +42,32 @@ public:
   };
   void run() {
     int currentWidth, currentHeight;
+
+#define PONG_LIGHT 1
+#if PONG_LIGHT
+    float lightDx = (rand() % 1000 / 1000.0f) * 10.0f;
+    float lightDy = (rand() % 1000 / 1000.0f) * 10.0f;
+    std::cout << "lightDx: " << lightDx << '\n';
+    std::cout << "lightDy: " << lightDy << '\n';
+#endif
+
     while (!this->window->closed()) {
       this->window->clear();
+      this->window->getWindowSize(currentWidth, currentHeight);
 
       // update game objects
+#if PONG_LIGHT
+      if (this->lightX + lightDx < 0 || currentWidth < this->lightX + lightDx) {
+        lightDx = -lightDx;
+      }
+      if (this->lightY + lightDy < 0 || currentHeight < this->lightY + lightDy) {
+        lightDy = -lightDy;
+      }
+      this->lightX += lightDx;
+      this->lightY += lightDy;
+#else
       this->window->getMousePosition(this->lightX, this->lightY);
-      this->window->getWindowSize(currentWidth, currentHeight);
+#endif
       this->shader->setUniform2f("light_pos", GameEngine::Vec2((float)(this->lightX * 16.0f / currentWidth), (float)(9.0f - this->lightY * 9.0f / currentHeight)));
 
       // render
