@@ -6,9 +6,7 @@ namespace GameEngine {
   }
   BatchRenderer2d::~BatchRenderer2d() {
     delete this->indexBuffer;
-    glDeleteVertexArrays(1, &this->vertexArray);
     glDeleteBuffers(1, &this->vertexBuffer);
-    delete[] this->buffer;
   }
   void BatchRenderer2d::init() {
     glGenVertexArrays(1, &this->vertexArray);
