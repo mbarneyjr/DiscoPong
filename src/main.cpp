@@ -1,3 +1,4 @@
+#include <time.h>
 #include <DiscoPongConfig.h>
 #include "window/Window.h"
 #include "shader/Shader.h"
@@ -25,6 +26,7 @@ private:
   double lightX, lightY;
 public:
   Game(int numColumns, int numRows, float spacingPercent) {
+    srand(time(NULL));
     this->window = new GameEngine::Window("Disco Pong", WIDTH, HEIGHT, GameEngine::Vec4(0.0f, 0.0f, 0.0f, 1.0f));
     this->shader = new GameEngine::Shader("resources/shaders/basic.vert", "resources/shaders/basic.frag");
     this->shader->enable();
