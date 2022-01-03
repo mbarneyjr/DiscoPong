@@ -9,6 +9,7 @@ namespace GameEngine {
     for (Buffer* buffer : this->buffers) {
       delete buffer;
     }
+    glDeleteVertexArrays(1, &this->vertexArrayId);
   }
 
   void VertexArray::addBuffer(Buffer* buffer, GLuint index) {

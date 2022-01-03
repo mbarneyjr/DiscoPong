@@ -9,6 +9,7 @@ namespace GameEngine {
     GLuint componentCount;
   public:
     Buffer(GLfloat* data, GLsizei size, GLuint componentCount);
+    ~Buffer();
 
     void bind() const;
     void unbind() const;

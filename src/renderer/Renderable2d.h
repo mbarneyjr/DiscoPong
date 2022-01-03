@@ -7,20 +7,18 @@
 #include "../shader/Shader.h"
 
 namespace GameEngine {
+  struct VertexData {
+    Vec3 vertex;
+    Vec4 color;
+  };
+
   class Renderable2d {
     protected:
       Vec3 position;
       Vec2 size;
       Vec4 color;
-      VertexArray* vertexArray;
-      IndexBuffer* indexBuffer;
-      Shader& shader;
     public:
-      Renderable2d(Vec3 position, Vec2 size, Vec4 color, Shader& shader);
-      virtual ~Renderable2d();
-      const VertexArray* getVertexArray() const;
-      const IndexBuffer* getIndexBuffer() const;
-      Shader& getShader() const;
+      Renderable2d(Vec3 position, Vec2 size, Vec4 color);
       const Vec3& getPosition() const;
       const Vec2& getSize() const;
       const Vec4& getColor() const;

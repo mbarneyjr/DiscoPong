@@ -4,25 +4,18 @@
 #include "shader/Shader.h"
 #include "math/math.h"
 #include "renderer/Renderable2d.h"
-#include "renderer/Simple2dRenderer.h"
+#include "renderer/BatchRenderer2d.h"
+#include "renderer/Sprite.h"
 
 #define WIDTH 960.0f
 #define HEIGHT 540.0f
-
-class GameObject : public GameEngine::Renderable2d {
-public:
-  GameObject(GameEngine::Vec3 position, GameEngine::Vec2 size, GameEngine::Vec4 color, GameEngine::Shader& shader) : GameEngine::Renderable2d(position, size, color, shader) {};
-  void setColor(GameEngine::Vec4 color) {
-    this->color = color;
-  };
-};
 
 class Game {
 private:
   GameEngine::Window *window;
   GameEngine::Shader *shader;
-  GameEngine::Simple2dRenderer *renderer;
-  std::vector<GameObject*> renderables;
+  GameEngine::BatchRenderer2d *renderer;
+  std::vector<GameEngine::Sprite*> renderables;
   double lightX, lightY;
 public:
   Game(int numColumns, int numRows, float spacingPercent) {
@@ -32,7 +25,7 @@ public:
     this->shader->enable();
     GameEngine::Mat4 ortho = GameEngine::Mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
     this->shader->setUniformMat4("pr_matrix", ortho);
-    this->renderer = new GameEngine::Simple2dRenderer();
+    this->renderer = new GameEngine::BatchRenderer2d();
     this->initializeGrid(numColumns, numRows, spacingPercent);
     this->lightX = 0;
     this->lightY = 0;
@@ -49,6 +42,7 @@ public:
 #if PONG_LIGHT
     float lightDx = (rand() % 1000 / 1000.0f) * 10.0f;
     float lightDy = (rand() % 1000 / 1000.0f) * 10.0f;
+
     std::cout << "lightDx: " << lightDx << '\n';
     std::cout << "lightDy: " << lightDy << '\n';
 #endif
@@ -73,9 +67,26 @@ public:
       this->shader->setUniform2f("light_pos", GameEngine::Vec2((float)(this->lightX * 16.0f / currentWidth), (float)(9.0f - this->lightY * 9.0f / currentHeight)));
 
       // render
-      for (GameObject* renderable : this->renderables) {
+      this->renderer->begin();
+      for (GameEngine::Sprite* renderable : this->renderables) {
+        GameEngine::Vec4 renderableColor = renderable->getColor();
+        GameEngine::Vec4 colorSpeed = renderable->colorSpeed;
+        if (renderableColor.x + colorSpeed.x < 0 || 1.0f < renderableColor.x + colorSpeed.x) {
+          renderable->colorSpeed.x = -colorSpeed.x;
+        }
+        if (renderableColor.y + colorSpeed.y < 0 || 1.0f < renderableColor.y + colorSpeed.y) {
+          renderable->colorSpeed.y = -colorSpeed.y;
+        }
+        if (renderableColor.z + colorSpeed.z < 0 || 1.0f < renderableColor.z + colorSpeed.z) {
+          renderable->colorSpeed.z = -colorSpeed.z;
+        }
+        if (renderableColor.w + colorSpeed.w < 0 || 1.0f < renderableColor.w + colorSpeed.w) {
+          renderable->colorSpeed.w = -colorSpeed.w;
+        }
+        renderable->setColor(GameEngine::Vec4(renderableColor.x + colorSpeed.x, renderableColor.y + colorSpeed.y, renderableColor.z + colorSpeed.z, renderableColor.w + colorSpeed.w));
         this->renderer->submit(renderable);
       }
+      this->renderer->end();
       this->renderer->flush();
       this->window->update();
     }
@@ -95,10 +106,17 @@ private:
         float green = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         float blue = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 
-        this->renderables.push_back(new GameObject(
-          GameEngine::Vec3((x * columnWidth) + spacingX, (y * rowHeight) + spacingY, 0.0f),
-          GameEngine::Vec2(sizeX, sizeY),
-          GameEngine::Vec4(red, green, blue, 1), *this->shader));
+        float spriteX = (x * columnWidth) + spacingX;
+        float spriteY = (y * rowHeight) + spacingY;
+        float spriteWidth = sizeX;
+        float spriteHeight = sizeY;
+        GameEngine::Vec4 spriteColor = GameEngine::Vec4(red, green, blue, 1);
+        GameEngine::Vec4 colorSpeed = GameEngine::Vec4(
+          (rand() % 1000 / 100000.0f),
+          (rand() % 1000 / 100000.0f),
+          (rand() % 1000 / 100000.0f),
+          0.0f);
+        this->renderables.push_back(new GameEngine::Sprite(spriteX, spriteY, spriteWidth, spriteHeight, spriteColor, colorSpeed));
       }
     }
   }

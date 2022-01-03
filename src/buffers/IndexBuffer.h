@@ -12,6 +12,7 @@ namespace GameEngine {
     GLuint count;
   public:
     IndexBuffer(INDEX_BUFFER_TYPE* data, GLsizei count);
+    ~IndexBuffer();
 
     void bind() const;
     void unbind() const;

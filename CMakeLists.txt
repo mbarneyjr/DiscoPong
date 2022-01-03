@@ -15,7 +15,8 @@ add_executable(${PROJECT_NAME}
   src/buffers/IndexBuffer.cpp
   src/buffers/VertexArray.cpp
   src/renderer/Renderable2d.cpp
-  src/renderer/Simple2dRenderer.cpp
+  src/renderer/BatchRenderer2d.cpp
+  src/renderer/Sprite.cpp
 )
 configure_file(src/DiscoPongConfig.h.in DiscoPongConfig.h)
 
